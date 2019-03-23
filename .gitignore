@@ -1,0 +1,17 @@
+*~
+*.swp
+*.7z
+*.bak
+*.o
+*.exe
+debug/
+fftw-3.3.5*
+*.mod
+libWin32/
+libx64/
+binWin32/
+binx64/
+
+include/COPYING
+include/README
+include/commons.h

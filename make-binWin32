@@ -1,0 +1,11 @@
+#!/bin/bash
+outdir=binWin32
+if [ ! -d $outdir ]
+then
+	mkdir $outdir
+fi
+cp libWin32/*.dll $outdir
+cp fftw-3.3.5-dll32/libfftw3f-3.dll $outdir
+cp /mingw/bin/libgcc_s_dw2-1.dll $outdir
+cp /mingw/bin/libgfortran-5.dll $outdir
+cp /mingw/bin/libquadmath-0.dll $outdir

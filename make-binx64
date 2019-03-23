@@ -1,0 +1,10 @@
+#!/bin/bash
+outdir=binx64
+if [ ! -d $outdir ]
+then
+	mkdir $outdir
+fi
+cp libx64/*.dll $outdir
+cp fftw-3.3.5-dll64/libfftw3f-3.dll $outdir
+cp /mingw64/bin/libgcc_s_seh-1.dll $outdir
+cp /mingw64/bin/libquadmath-0.dll $outdir
