@@ -10,10 +10,8 @@ Copyright (c) 2019 by Wayne E. Wright, W5XD
  KA9Q; and other memobers of the WSJT Development Group.
 
 If you want to build a Visual Studio .net project that implements FT8, then
-you do NOT need to build this kit. Instead, download its three results:
-	XDxmitFT8lib32.7z
-	XDxmitFT8lib64.7z
-	XDxmitFT8Sdk.7z
+you do NOT need to build this kit. Instead, download its result:
+	 XDwsjtFT8Sdk-<version>.7z
 And clone the git project Digi-XDft
 
 See the <a href='Makefile'>Makefile</a>.
