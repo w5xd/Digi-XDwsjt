@@ -7,7 +7,7 @@ Copyright (c) 2019 by Wayne E. Wright, W5XD
  ISCAT, MSK144 are Copyright (C) 2001-2018 by one or more of the following authors:
  Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, 
  IV3NWV; Grea Bream, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn,
- KA9Q; and other memobers of the WSJT Development Group.
+ KA9Q; and other members of the WSJT Development Group.
 
 If you want to build a Visual Studio .net project that implements FT8, then
 you do NOT need to build this kit. Instead, download its result:
