@@ -3,7 +3,7 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
-#include "XDxmitFT8.h"
+#include "XDencode.h"
 
 int main(int argc, char **argv)
 {

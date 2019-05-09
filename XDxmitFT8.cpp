@@ -12,7 +12,6 @@
  */
 #include <cstddef>
 
-#include "include/XDxmitFt8.h"
 #include "include/commons.h"
 
 decltype(foxcom_)* getFoxcom(void)

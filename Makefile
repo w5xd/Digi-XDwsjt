@@ -1,4 +1,4 @@
-# Makefile for XDxmitFT8.dll for Windows
+# Makefile for XDwsjtFT.dll for Windows
 # Copyright (c) 2019 by Wayne E. Wright, W5XD
 #
 # Notice required because this work is a derivative of WSJT-X:
@@ -10,20 +10,20 @@
 #   IV3NWV; Grea Bream, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn,
 #   KA9Q; and other memobers of the WSJT Development Group.
 #
-# If you want to build a .NET application that implements FT8 that is compatible
+# If you want to build a .NET application that implements FT8/FT4 that is compatible
 # with wsjtx, then you probably do NOT need to run this Makefile. 
 #
-# If you link to XDwsjtFT8.dll, you should read this:
+# If you link to XDwsjtFT.dll, you should read this:
 # https://www.gnu.org/licenses/gpl-faq.html#IfLibraryIsGPL
 #
 # Instead, you need the binaries and include files that result from
-# this make. That result is built into XDwsjtFT8Sdk.7z. That kit is
+# this make. That result is built into XDwsjtSdk.7z. That kit is
 # build on occasion and made available
 # for download in the repo where you found this source.
-# Also in XDwsjtFT8SK are the binaires you'll need
+# Also in XDwsjtSdk are the binaires you'll need
 # for a distribution kit in runtimeWin32 and/or runtimex64.
 #
-# This Makefile builds the Windows dll XDwsjtFT8.dll using the MINGW toolset.
+# This Makefile builds the Windows dll XDwsjtFT.dll using the MINGW toolset.
 # There are 3 downloads to obtain to make this work, (and a fourth to get a w64 dll):
 # 
 # 1. The file wsjtx-2.0.1.tgz from https://sourceforge.net/projects/wsjt/files/wsjtx-2.0.1/
@@ -60,7 +60,7 @@ WSJTX_SOURCE = /wsjtx-src
 # Two more files to edit to make the 64 bit build work:
 # In the MINGW msys directory with msys.bat, I added the following contents to a new file named msys64.bat:
 # in msys64.bat:
-# 	@rem for XDxmitFT8 64 bit build
+# 	@rem for XDwsjtFT 64 bit build
 #	set MSYSTEM=MINGW64
 # 	call msys.bat
 # 
@@ -83,11 +83,11 @@ WSJTX_SOURCE = /wsjtx-src
 # What you need at the end is the buildWin32 (or buildx64) directory. Those are the binaries for
 # distribution. 
 #
-# To build against XDxmitFT8.dll, you go to the Visual Studio solution (in a separate 
+# To build against XDwsjtFT.dll, you go to the Visual Studio solution (in a separate 
 # repo) and edit the 3 Visual Studio .props files to point here for INCLUDE and LIB defintions.
 #
 # To pack up the results of building this kit, use MakeWinSDK.bat to pack
-# only the bits the Visual Studio project needs into XDxmitFT8Sdk.7z.
+# only the bits the Visual Studio project needs into XDwsjtSdk.7z.
 # 
 FC = gfortran
 CPP = g++
@@ -119,19 +119,23 @@ CFLAGS = $(OPTIMIZE_OR_DEBUG) -I. -I/boost -std=c++0x -fpermissive -mno-stack-ar
 vpath %.f90 $(WSJTX_SOURCE)/lib
 vpath %.f03 $(WSJTX_SOURCE)/lib
 vpath %.f90 $(WSJTX_SOURCE)/lib/ft8
+vpath %.f90 $(WSJTX_SOURCE)/lib/ft2
+vpath %.f90 $(WSJTX_SOURCE)/lib/ft4
 vpath %.f90 $(WSJTX_SOURCE)/lib/77bit
 vpath %.cpp $(WSJTX_SOURCE)/lib
-vpath %.f90 XDrcvFT8            #one compile is code that is NOT from wsjtx
+vpath %.f90 XDrcv            #one compile is code that is NOT from wsjtx
 
-all:    $(BUILDDIR)/XDwsjtFT8.dll include/commons.h $(BUILDDIR)/CommonBlockOffsetDisplay \
-	$(BUILDDIR)/XDwsjtFT8.dll $(KITLIBDIR) packtest.exe
+all:    $(BUILDDIR)/XDwsjtFT.dll include/commons.h $(BUILDDIR)/CommonBlockOffsetDisplay \
+	$(BUILDDIR)/XDwsjtFT.dll $(KITLIBDIR) packtest.exe
+
 
 #modulator
 fortran_xmit_src = packjt.f90 packjt77.f90 genft8.f90 grid2deg.f90 deg2grid.f90 fmtmsg.f90 crc.f90 \
-		   encode174_91.f90 \
+		   encode174_91.f90 fftw3mod.f90 \
       		   chkcall.f90 four2a.f90 foxgen.f90 foxfilt.f90 symspec.f90 flat1.f90 smo.f90 \
 		   pctile.f90 shell.f90 \
-     	           refspectrum.f90 smo121.f90 polyfit.f90 db.f90 determ.f90
+     	           refspectrum.f90 smo121.f90 polyfit.f90 db.f90 determ.f90 gfsk_pulse.f90 \
+		   gen_ft4wave.f90 genft4.f90
 
 $(BUILDDIR)/XDxmitFT8.o: XDxmitFT8.cpp include/commons.h
 
@@ -142,17 +146,19 @@ objects = $(patsubst %.f90,$(BUILDDIR)/%.o,$(fortran_xmit_src))
 cpp_objects = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(cpp_src))
 
 #demodulator
-fortran_rcv_src = fftw3mod.f90 options.f90 prog_args.f90 iso_c_utilities.f90 \
+fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
 		  timer_module.f90 timer_impl.f90 ft8_decode.f90 \
 		  my_hash.f90 ft8b.f90 sync8.f90 ft8apset.f90 indexx.f90 sync8d.f90 \
 		  twkfreq1.f90 baseline.f90 \
 		  ft8_downsample.f90 subtractft8.f90 osd174_91.f90 bpdecode174_91.f90 \
 		  genft8refsig.f90 chkcrc14a.f90 \
 		  platanh.f90 azdist.f90 geodist.f90 filbig.f90 \
-		  xdinitfftw3.f90 xduninitfftw3.f90
+		  xdinitfftw3.f90 xduninitfftw3.f90 nuttal_window.f90 gen_ft8wave.f90 \
+		  ft4_decode.f90 ft4_downsample.f90 getcandidates4.f90 subtractft4.f90 \
+		  sync4d.f90 
 
-$(BUILDDIR)/XDrcvFT8.o: XDrcvFT8/XDrcvFT8.f90 XDrcvFT8/jt9com.f90
-	${FC} ${FFLAGS} -Wno-unused-dummy-argument -c XDrcvFT8/XDrcvFT8.f90 -o $(BUILDDIR)/XDrcvFT8.o
+$(BUILDDIR)/XDdecode.o: XDrcv/XDdecode.f90 XDrcv/jt9com.f90
+	${FC} ${FFLAGS} -Wno-unused-dummy-argument -c XDrcv/XDdecode.f90 -o $(BUILDDIR)/XDdecode.o
 
 robjects = $(patsubst %.f90,$(BUILDDIR)/%.o,$(fortran_rcv_src))
 
@@ -179,29 +185,29 @@ include/commons.h:
 	cp $(WSJTX_SOURCE)/commons.h include
 	cp $(WSJTX_SOURCE)/COPYING include
 #...and a few more here
-XDrcvFT8/jt9com.f90:
-	cp $(WSJTX_SOURCE)/lib/jt9com.f90 XDrcvFT8
-	cp $(WSJTX_SOURCE)/lib/timer_common.inc XDrcvFT8
-	cp $(WSJTX_SOURCE)/lib/constants.f90 XDrcvFT8
+XDrcv/jt9com.f90:
+	cp $(WSJTX_SOURCE)/lib/jt9com.f90 XDrcv
+	cp $(WSJTX_SOURCE)/lib/timer_common.inc XDrcv
+	cp $(WSJTX_SOURCE)/lib/constants.f90 XDrcv
 
 #resource compile so the binaries have version numbers.
 #how come nobody in the open source world puts versions in their binaries like this?
-$(BUILDDIR)/XDwsjtFT8res.o:	XDwsjtFT8.rc
-	windres XDwsjtFT8.rc $(BUILDDIR)/XDwsjtFT8res.o
+$(BUILDDIR)/XDwsjtFTres.o:	XDwsjtFT.rc
+	windres XDwsjtFT.rc $(BUILDDIR)/XDwsjtFTres.o
 
-$(KITLIBDIR):	 $(BUILDDIR)/XDwsjtFT8.dll make-$(KITLIBDIR)
+$(KITLIBDIR):	 $(BUILDDIR)/XDwsjtFT.dll make-$(KITLIBDIR)
 	make-$(KITLIBDIR)
 
 # is fftw3f-3 the best one for this purpose? its the one wsjtx-2.0.0 uses
-$(BUILDDIR)/XDwsjtFT8.dll: \
-	$(objects) $(cpp_objects) $(BUILDDIR)/XDwsjtFT8res.o $(BUILDDIR)/XDxmitFT8.o \
-		$(robjects) $(BUILDDIR)/XDrcvFT8.o $(BUILDDIR)/packandunpack77.o
-	$(FC) -g -Og -o $(BUILDDIR)/XDwsjtFT8.dll $(objects) $(cpp_objects) \
-	$(BUILDDIR)/XDwsjtFT8res.o \
+$(BUILDDIR)/XDwsjtFT.dll: \
+	$(objects) $(cpp_objects) $(BUILDDIR)/XDwsjtFTres.o $(BUILDDIR)/XDxmitFT8.o \
+		$(robjects) $(BUILDDIR)/XDdecode.o $(BUILDDIR)/packandunpack77.o
+	$(FC) -g -Og -o $(BUILDDIR)/XDwsjtFT.dll $(objects) $(cpp_objects) \
+	$(BUILDDIR)/XDwsjtFTres.o \
 	$(BUILDDIR)/XDxmitFT8.o \
 	$(BUILDDIR)/packandunpack77.o \
-	$(robjects) $(BUILDDIR)/XDrcvFT8.o \
-	-shared -L$(LIB) -lfftw3f-3 -Wl,--out-implib,$(BUILDDIR)/XDwsjtFT8.lib
+	$(robjects) $(BUILDDIR)/XDdecode.o \
+	-shared -L$(LIB) -lfftw3f-3 -Wl,--out-implib,$(BUILDDIR)/XDwsjtFT.lib
 
 #test programs
 
@@ -213,13 +219,13 @@ $(BUILDDIR)/CommonBlockOffsetDisplay: CommonBlockOffsetDisplay.cpp include/Commo
 
 #the pack77 unpack77 routines might need a little debug inspection
 packtest.exe: \
-	$(objects) $(cpp_objects) $(BUILDDIR)/XDwsjtFT8res.o $(BUILDDIR)/XDxmitFT8.o \
-		$(robjects) $(BUILDDIR)/XDrcvFT8.o $(BUILDDIR)/packandunpack77.o packtest.o
+	$(objects) $(cpp_objects) $(BUILDDIR)/XDwsjtFTres.o $(BUILDDIR)/XDxmitFT8.o \
+		$(robjects) $(BUILDDIR)/XDdecode.o $(BUILDDIR)/packandunpack77.o packtest.o
 	${CPP} -g -Og -o packtest.exe packtest.o $(objects) $(cpp_objects) \
-	$(BUILDDIR)/XDwsjtFT8res.o \
+	$(BUILDDIR)/XDwsjtFTres.o \
 	$(BUILDDIR)/XDxmitFT8.o \
 	$(BUILDDIR)/packandunpack77.o \
-	$(robjects) $(BUILDDIR)/XDrcvFT8.o \
+	$(robjects) $(BUILDDIR)/XDdecode.o \
 	-L$(LIB) -lfftw3f-3 -lgfortran $(LIBQUADMATH)
 
 packtest.o: packtest.cpp

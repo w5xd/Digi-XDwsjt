@@ -1,4 +1,4 @@
-subroutine xdft8decode(params, id2, temporary_directory)
+subroutine xddecode(params, id2, temporary_directory)
     ! Copyright (c) 2019 by Wayne E. Wright, W5XD.
     ! 
     ! stripped down version of wsjtx-2.0.0 
@@ -43,6 +43,7 @@ subroutine xdft8decode(params, id2, temporary_directory)
         
   use timer_module, only: timer
   use ft8_decode
+  use ft4_decode
   use iso_c_binding, only: C_CHAR, c_null_char
  
   include 'jt9com.f90'
@@ -57,6 +58,9 @@ subroutine xdft8decode(params, id2, temporary_directory)
   type, extends(ft8_decoder) :: counting_ft8_decoder
      integer :: decoded
   end type counting_ft8_decoder
+  type, extends(ft4_decoder) :: counting_ft4_decoder
+     integer :: decoded
+  end type counting_ft4_decoder
 
   logical single_decode,bVHF,newdat,ex
   character(len=20) :: datetime
@@ -64,6 +68,7 @@ subroutine xdft8decode(params, id2, temporary_directory)
   character(len=6) :: mygrid, hisgrid
   save
   type(counting_ft8_decoder) :: my_ft8
+  type(counting_ft4_decoder) :: my_ft4
 
   !cast C character arrays to Fortran character strings
   datetime=transfer(params%datetime, datetime)
@@ -79,6 +84,7 @@ subroutine xdft8decode(params, id2, temporary_directory)
 
   ! initialize decode counts
   my_ft8%decoded = 0
+  my_ft4%decoded = 0
 
   single_decode=iand(params%nexp_decode,32).ne.0
   bVHF=iand(params%nexp_decode,64).ne.0
@@ -168,7 +174,16 @@ subroutine xdft8decode(params, id2, temporary_directory)
      go to 800
   endif
 
-800 ndecoded = my_ft8%decoded
+  if(params%nmode.eq.5) then
+     call timer('decft4  ',0)
+     call my_ft4%decode(ft4_decoded,id2,params%nQSOProgress,params%nfqso,    &
+          params%nutc,params%nfa,params%nfb,params%ndepth,ncontest,          &
+          mycall,hiscall)
+     call timer('decft4  ',1)
+     go to 800
+  endif
+
+800 ndecoded = my_ft4%decoded + my_ft8%decoded
   write(*,1010) nsynced,ndecoded
 1010 format('<DecodeFinished>',2i4)
   call flush(6)
@@ -280,8 +295,48 @@ contains
 
     return
   end subroutine ft8_decoded
+  
+subroutine ft4_decoded (this,sync,snr,dt,freq,decoded,nap,qual)
+    use ft4_decode
+    implicit none
 
-end subroutine xdft8decode 
+    class(ft4_decoder), intent(inout) :: this
+    real, intent(in) :: sync
+    integer, intent(in) :: snr
+    real, intent(in) :: dt
+    real, intent(in) :: freq
+    character(len=37), intent(in) :: decoded
+    character c1*12,c2*12,g2*4,w*4
+    integer i0,i1,i2,i3,i4,i5,n30,nwrap
+    integer, intent(in) :: nap 
+    real, intent(in) :: qual 
+    character*2 annot
+    character*37 decoded0
+    
+    decoded0=decoded
+
+    annot='  ' 
+    if(ncontest.eq.0 .and. nap.ne.0) then
+       write(annot,'(a1,i1)') 'a',nap
+       if(qual.lt.0.17) decoded0(37:37)='?'
+    endif
+
+    write(*,1001) params%nutc,snr,dt,nint(freq),decoded0,annot
+1001 format(i6.6,i4,f5.1,i5,' + ',1x,a37,1x,a2)
+    write(13,1002) params%nutc,nint(sync),snr,dt,freq,0,decoded0
+1002 format(i6.6,i4,i5,f6.1,f8.0,i4,3x,a37,' FT4')
+    
+    call flush(6)
+    call flush(13)
+    
+    select type(this)
+    type is (counting_ft4_decoder)
+       this%decoded = this%decoded + 1
+    end select
+
+    return
+  end subroutine ft4_decoded
+end subroutine xddecode 
 
 subroutine sleep_msec(m)
         integer m

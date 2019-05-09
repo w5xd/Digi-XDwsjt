@@ -1,7 +1,7 @@
 #include "winresrc.h"
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 2,0,1,2
-PRODUCTVERSION 2,0,1,2
+FILEVERSION 2,1,0,1
+PRODUCTVERSION 2,1,0,1
 FILETYPE VFT_DLL
 BEGIN
     BLOCK "StringFileInfo"
@@ -9,9 +9,9 @@ BEGIN
         BLOCK "040904b0"
 	BEGIN
             VALUE "FileDescription", "wsjt modem wrapper"
-            VALUE "ProductName", "XDwsjtFT8 as derived from WSJT-X"
-            VALUE "FileVersion", "2.0.1.2"
-            VALUE "ProductVersion", "2.0.1.2"
+            VALUE "ProductName", "XDwsjtFT as derived from WSJT-X"
+            VALUE "FileVersion", "2.1.0.1"
+            VALUE "ProductVersion", "2.1.0.1"
             VALUE "LegalCopyright", "Copyright (c) 2019 by Wayne E. Wright, W5XD"
         END
     END
