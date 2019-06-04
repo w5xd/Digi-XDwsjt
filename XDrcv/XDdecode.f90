@@ -3,7 +3,7 @@ subroutine xddecode(params, id2, temporary_directory)
     ! 
     ! stripped down version of wsjtx-2.0.0 
     ! subroutine multimode_decoder in decoder.f90
-    ! everything that is not FT8 is removed.
+    ! everything that is not FT8/FT4 is removed.
     ! 
     ! Its a problem of choose your poison. The choices considered were:
     ! A) This modified version of multimode_decoder 
@@ -39,7 +39,7 @@ subroutine xddecode(params, id2, temporary_directory)
     !
     ! As of this writing, I decided that (A) is preferable to (B).
     ! ...so here is a stripped down version of multimode_decoder
-    ! that is capable only of FT8.
+    ! that is capable only of FT8 and FT4.
         
   use timer_module, only: timer
   use ft8_decode
@@ -158,8 +158,8 @@ subroutine xddecode(params, id2, temporary_directory)
                  n30fox(j)=n
                  m=n30max-n
                  if(len(trim(g2fox(j))).eq.4) then
-                    call azdist(mygrid,g2fox(j),0.d0,nAz,nEl,nDmiles,nDkm, &
-                         nHotAz,nHotABetter)
+                    call azdist(mygrid,g2fox(j)//'  ',0.d0,nAz,nEl,nDmiles,	&
+                         nDkm,nHotAz,nHotABetter)
                  else
                     nDkm=9999
                  endif
@@ -177,8 +177,8 @@ subroutine xddecode(params, id2, temporary_directory)
   if(params%nmode.eq.5) then
      call timer('decft4  ',0)
      call my_ft4%decode(ft4_decoded,id2,params%nQSOProgress,params%nfqso,    &
-          params%nutc,params%nfa,params%nfb,params%ndepth,ncontest,          &
-          mycall,hiscall)
+          params%nutc,params%nfa,params%nfb,params%ndepth,                   &
+          logical(params%lapcqonly),ncontest,mycall,hiscall)
      call timer('decft4  ',1)
      go to 800
   endif
