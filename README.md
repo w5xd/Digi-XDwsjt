@@ -23,4 +23,4 @@ MakeWinSDK to pack up an SDK that itself supports whichever
 architectures you have built up to then.
 
 
-The sources from wsjtx-2.0.1 are reproduced here in wsjtx-2.0.1-subset.7z. Only the sources needed to build XDwsjtFT8.dll are included.
+The sources from wsjtx-2.1.0 are reproduced here in wsjtx-2.1.0-subset.7z. Only the sources needed to build XDwsjtFT8.dll are included.

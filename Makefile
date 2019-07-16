@@ -155,7 +155,7 @@ fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
 		  platanh.f90 azdist.f90 geodist.f90 filbig.f90 \
 		  xdinitfftw3.f90 xduninitfftw3.f90 nuttal_window.f90 gen_ft8wave.f90 \
 		  ft4_decode.f90 ft4_downsample.f90 getcandidates4.f90 subtractft4.f90 \
-		  sync4d.f90 ft4_baseline.f90
+		  sync4d.f90 ft4_baseline.f90 get_ft4_bitmetrics.f90
 
 $(BUILDDIR)/XDdecode.o: XDrcv/XDdecode.f90 XDrcv/jt9com.f90
 	${FC} ${FFLAGS} -Wno-unused-dummy-argument -c XDrcv/XDdecode.f90 -o $(BUILDDIR)/XDdecode.o

@@ -188,7 +188,7 @@ subroutine xddecode(params, id2, temporary_directory)
 1010 format('<DecodeFinished>',2i4)
   call flush(6)
   close(13)
-  close(19)
+  if(ncontest.eq.5) close(19)
   if(params%nmode.eq.4 .or. params%nmode.eq.65) close(14)
 
   return
@@ -235,7 +235,7 @@ contains
     decoded0=decoded
 
     annot='  ' 
-    if(ncontest.eq.0 .and. nap.ne.0) then
+    if(nap.ne.0) then
        write(annot,'(a1,i1)') 'a',nap
        if(qual.lt.0.17) decoded0(37:37)='?'
     endif
@@ -316,7 +316,7 @@ subroutine ft4_decoded (this,sync,snr,dt,freq,decoded,nap,qual)
     decoded0=decoded
 
     annot='  ' 
-    if(ncontest.eq.0 .and. nap.ne.0) then
+    if(nap.ne.0) then
        write(annot,'(a1,i1)') 'a',nap
        if(qual.lt.0.17) decoded0(37:37)='?'
     endif
