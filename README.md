@@ -10,7 +10,7 @@ Copyright (c) 2019 by Wayne E. Wright, W5XD
 
 If you want to build a Visual Studio .net project that implements FT8, then
 you do <b><i>not</i></b> need to build this kit. Instead, download its result:
-	 XDwsjtFT8Sdk-&lt;version&gt;.7z
+	 XDwsjtFtSdk-&lt;version&gt;.7z
 
 See the <a href='Makefile'>Makefile</a>.
 It uses <a href='https://sourceforge.net/projects/mingw/'>MINGW</a> to build a dll with the FT8 encoding algorithms as built from 
