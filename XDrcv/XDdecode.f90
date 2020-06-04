@@ -94,19 +94,6 @@ subroutine xddecode(params, id2, temporary_directory)
   if(params%nranera.eq.0) ntrials=0
   
   nfail=0
-10 if (params%nagain) then
-     open(13,file=trim(temp_dir)//'/decoded.txt',status='unknown',            &
-          position='append',iostat=ios)
-  else
-     open(13,file=trim(temp_dir)//'/decoded.txt',status='unknown',iostat=ios)
-  endif
-  if(ios.ne.0) then
-     nfail=nfail+1
-     if(nfail.le.3) then
-        call sleep_msec(10)
-        go to 10
-     endif
-  endif
 
   if(params%nmode.eq.8) then
 ! We're in FT8 mode
@@ -189,7 +176,6 @@ subroutine xddecode(params, id2, temporary_directory)
   write(*,1010) nsynced,ndecoded
 1010 format('<DecodeFinished>',2i4)
   call flush(6)
-  close(13)
   if(ncontest.eq.6) close(19)
   if(params%nmode.eq.4 .or. params%nmode.eq.65) close(14)
 
@@ -251,8 +237,6 @@ contains
 1000 format(i6.6,i4,f5.1,i5,' ~ ',1x,a22,1x,a2)
     if(i0.gt.0) write(*,1001) params%nutc,snr,dt,nint(freq),decoded0,annot
 1001 format(i6.6,i4,f5.1,i5,' ~ ',1x,a37,1x,a2)
-    write(13,1002) params%nutc,nint(sync),snr,dt,freq,0,decoded0
-1002 format(i6.6,i4,i5,f6.1,f8.0,i4,3x,a37,' FT8')
 
     if(ncontest.eq.6) then
     i1=index(decoded0,' ')
@@ -288,7 +272,6 @@ contains
     endif
     
     call flush(6)
-    call flush(13)
     
     select type(this)
     type is (counting_ft8_decoder)
@@ -323,11 +306,8 @@ subroutine ft4_decoded (this,sync,snr,dt,freq,decoded,nap,qual)
 
     write(*,1001) params%nutc,snr,dt,nint(freq),decoded0,annot
 1001 format(i6.6,i4,f5.1,i5,' + ',1x,a37,1x,a2)
-    write(13,1002) params%nutc,nint(sync),snr,dt,freq,0,decoded0
-1002 format(i6.6,i4,i5,f6.1,f8.0,i4,3x,a37,' FT4')
     
     call flush(6)
-    call flush(13)
     
     select type(this)
     type is (counting_ft4_decoder)
