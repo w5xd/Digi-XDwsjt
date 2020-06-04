@@ -87,6 +87,12 @@ contains
     ndecodes=0
     allmessages='                                     '
     allsnrs=0
+!WSJTX 2.2 uses nzhsym and the "save" of ndec_early and itone_save to call
+!subtractft8 on the current sound samples (higher nzhsym) w.r.t. the previously
+!detected itones (previous nzhsym).
+!That code is "rigid" in the sense that it only works for the specific values of
+!nzysym of 41, 47, and 50 in that order.
+!So that code is removed here.
     ifa=nfa
     ifb=nfb
     if(nagain) then
@@ -124,6 +130,7 @@ contains
         f1=candidate(1,icand)
         xdt=candidate(2,icand)
         xbase=10.0**(0.1*(sbase(nint(f1/3.125))-40.0))
+        msg37='                                     '
         call timer('ft8b    ',0)
         call ft8b(dd,newdat,nQSOProgress,nfqso,nftx,ndeep,nzhsym,lft8apon,  &
              lapcqonly,napwid,lsubtract,nagain,ncontest,iaptype,mycall12,   &
