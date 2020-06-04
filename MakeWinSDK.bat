@@ -3,8 +3,14 @@
 @rem Makefile does NOT invoke MakeWinSDK.bat. You have to
 @rem first "make all" in a 32bit and/or 64bit mingw environment.
 @rem Once those are complete, run this command
-if exist XDwsjtFtSdk.7z del XDwsjtFtSdk.7z
-7z a XDwsjtFtSdk.7z libWin32/*.lib libx64/*.lib include
-if exist binWin32 7z a XDwsjtFtSdk.7z binWin32 
-if exist binx64 7z a XDwsjtFtSdk.7z binx64 
+if exist XDwsjtFtSdk.zip del XDwsjtFtSdk.zip
+7z a XDwsjtFtSdk.zip libWin32/*.lib libx64/*.lib include
+if exist binWin32 (
+ copy "\MinGW\bin\libstdc++-6.dll" binWin32
+ 7z a XDwsjtFtSdk.zip binWin32 
+)
+if exist binx64 (
+ copy "\mingw64\bin\libstdc++-6.dll" binx64
+ 7z a XDwsjtFtSdk.zip binx64 
+)
 

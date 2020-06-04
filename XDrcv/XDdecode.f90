@@ -1,7 +1,7 @@
 subroutine xddecode(params, id2, temporary_directory)
-    ! Copyright (c) 2019 by Wayne E. Wright, W5XD.
+    ! Copyright (c) 2020 by Wayne E. Wright, W5XD.
     ! 
-    ! stripped down version of wsjtx-2.0.0 
+    ! stripped down version of wsjtx-2.2.0 
     ! subroutine multimode_decoder in decoder.f90
     ! everything that is not FT8/FT4 is removed.
     ! 
@@ -86,6 +86,7 @@ subroutine xddecode(params, id2, temporary_directory)
   my_ft8%decoded = 0
   my_ft4%decoded = 0
 
+  ncontest=iand(params%nexp_decode,7)
   single_decode=iand(params%nexp_decode,32).ne.0
   bVHF=iand(params%nexp_decode,64).ne.0
   if(mod(params%nranera,2).eq.0) ntrials=10**(params%nranera/2)
@@ -110,7 +111,7 @@ subroutine xddecode(params, id2, temporary_directory)
   if(params%nmode.eq.8) then
 ! We're in FT8 mode
      
-     if(ncontest.eq.5) then
+     if(ncontest.eq.6) then
 ! Fox mode: initialize and open houndcallers.txt     
         inquire(file=trim(temp_dir)//'/houndcallers.txt',exist=ex)
         if(.not.ex) then
@@ -127,12 +128,13 @@ subroutine xddecode(params, id2, temporary_directory)
 
      call timer('decft8  ',0)
      newdat=params%newdat
-     ncontest=iand(params%nexp_decode,7)
+
      call my_ft8%decode(ft8_decoded,id2,params%nQSOProgress,params%nfqso,    &
           params%nftx,newdat,params%nutc,params%nfa,params%nfb,              &
-          params%ndepth,ncontest,logical(params%nagain),                     &
-          logical(params%lft8apon),logical(params%lapcqonly),                &
-          params%napwid,mycall,hiscall,hisgrid)
+          params%nzhsym,params%ndepth,params%emedelay,ncontest,              &
+          logical(params%nagain),logical(params%lft8apon),                   &
+          logical(params%lapcqonly),params%napwid,mycall,hiscall,            &
+          params%ndiskdat)
      call timer('decft8  ',1)
      if(nfox.gt.0) then
         n30min=minval(n30fox(1:nfox))
@@ -140,7 +142,7 @@ subroutine xddecode(params, id2, temporary_directory)
      endif
      j=0
 
-     if(ncontest.eq.5) then
+     if(ncontest.eq.6) then
 ! Fox mode: save decoded Hound calls for possible selection by FoxOp
         rewind 19
         if(nfox.eq.0) then
@@ -158,7 +160,7 @@ subroutine xddecode(params, id2, temporary_directory)
                  n30fox(j)=n
                  m=n30max-n
                  if(len(trim(g2fox(j))).eq.4) then
-                    call azdist(mygrid,g2fox(j)//'  ',0.d0,nAz,nEl,nDmiles,	&
+                    call azdist(mygrid,g2fox(j)//'  ',0.d0,nAz,nEl,nDmiles, &
                          nDkm,nHotAz,nHotABetter)
                  else
                     nDkm=9999
@@ -177,7 +179,7 @@ subroutine xddecode(params, id2, temporary_directory)
   if(params%nmode.eq.5) then
      call timer('decft4  ',0)
      call my_ft4%decode(ft4_decoded,id2,params%nQSOProgress,params%nfqso,    &
-          params%nutc,params%nfa,params%nfb,params%ndepth,                   &
+          params%nfa,params%nfb,params%ndepth,                               &
           logical(params%lapcqonly),ncontest,mycall,hiscall)
      call timer('decft4  ',1)
      go to 800
@@ -188,7 +190,7 @@ subroutine xddecode(params, id2, temporary_directory)
 1010 format('<DecodeFinished>',2i4)
   call flush(6)
   close(13)
-  if(ncontest.eq.5) close(19)
+  if(ncontest.eq.6) close(19)
   if(params%nmode.eq.4 .or. params%nmode.eq.65) close(14)
 
   return
@@ -252,7 +254,7 @@ contains
     write(13,1002) params%nutc,nint(sync),snr,dt,freq,0,decoded0
 1002 format(i6.6,i4,i5,f6.1,f8.0,i4,3x,a37,' FT8')
 
-    if(ncontest.eq.5) then
+    if(ncontest.eq.6) then
     i1=index(decoded0,' ')
     i2=i1 + index(decoded0(i1+1:),' ')
     i3=i2 + index(decoded0(i2+1:),' ')
@@ -306,8 +308,6 @@ subroutine ft4_decoded (this,sync,snr,dt,freq,decoded,nap,qual)
     real, intent(in) :: dt
     real, intent(in) :: freq
     character(len=37), intent(in) :: decoded
-    character c1*12,c2*12,g2*4,w*4
-    integer i0,i1,i2,i3,i4,i5,n30,nwrap
     integer, intent(in) :: nap 
     real, intent(in) :: qual 
     character*2 annot
