@@ -117,6 +117,8 @@ OPTIMIZE_OR_DEBUG = -O2
 FFLAGS = $(OPTIMIZE_OR_DEBUG) -I$(WSJTX_SOURCE)/lib -fbounds-check -Wall -Wno-conversion -fno-second-underscore ${ARCH}
 CFLAGS = $(OPTIMIZE_OR_DEBUG) -I. -I/boost -std=c++0x -fpermissive -mno-stack-arg-probe ${ARCH}
 
+vpath %.f90 XDrcv            #compile is code that is NOT from wsjtx
+vpath %.cpp XDrcv
 vpath %.f90 $(WSJTX_SOURCE)/lib
 vpath %.f03 $(WSJTX_SOURCE)/lib
 vpath %.f90 $(WSJTX_SOURCE)/lib/ft8
@@ -124,8 +126,6 @@ vpath %.f90 $(WSJTX_SOURCE)/lib/ft2
 vpath %.f90 $(WSJTX_SOURCE)/lib/ft4
 vpath %.f90 $(WSJTX_SOURCE)/lib/77bit
 vpath %.cpp $(WSJTX_SOURCE)/lib
-vpath %.f90 XDrcv            #one compile is code that is NOT from wsjtx
-vpath %.cpp XDrcv
 
 all:    $(BUILDDIR)/XDwsjtFT.dll include/commons.h $(BUILDDIR)/CommonBlockOffsetDisplay \
 	$(BUILDDIR)/XDwsjtFT.dll $(KITLIBDIR) packtest.exe
@@ -150,7 +150,7 @@ cpp_objects = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(cpp_src))
 
 #demodulator
 fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
-		  timer_module.f90 timer_impl.f90 XDft8_decode.f90 \
+		  timer_module.f90 timer_impl.f90 ft8_decode.f90 \
 		  my_hash.f90 ft8b.f90 sync8.f90 ft8apset.f90 indexx.f90 sync8d.f90 \
 		  twkfreq1.f90 baseline.f90 \
 		  ft8_downsample.f90 subtractft8.f90 osd174_91.f90 bpdecode174_91.f90 \
@@ -239,3 +239,4 @@ packtest.o: packtest.cpp
 clean:
 	$(RM) *.mod $(BUILDDIR)/*.o $(BUILDDIR)/*.dll $(BUILDDIR)/*.lib include/commons.h $(BUILDDIR)/*.exe *.exe *.o
 	$(RM) -rf $(KITLIBDIR)
+	$(RM) XDrcv/jt9com.f90 XDrcv/timer_common.inc XDrcv/constants.j90
