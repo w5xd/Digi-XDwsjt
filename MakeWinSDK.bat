@@ -10,6 +10,7 @@
 @rem first "make all" in a 32bit and/or 64bit mingw environment.
 @rem Once those are complete, run this command
 if exist %zip% del %zip%
+if exist include\*~ del include\*~
 7z a %zip% libWin32/*.lib libx64/*.lib include
 if exist binWin32 (
  copy "\MinGW\bin\libstdc++-6.dll" binWin32
