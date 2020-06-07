@@ -239,4 +239,4 @@ packtest.o: packtest.cpp
 clean:
 	$(RM) *.mod $(BUILDDIR)/*.o $(BUILDDIR)/*.dll $(BUILDDIR)/*.lib include/commons.h $(BUILDDIR)/*.exe *.exe *.o
 	$(RM) -rf $(KITLIBDIR)
-	$(RM) XDrcv/jt9com.f90 XDrcv/timer_common.inc XDrcv/constants.j90
+	$(RM) XDrcv/jt9com.f90 XDrcv/timer_common.inc XDrcv/constants.f90
