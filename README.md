@@ -13,10 +13,10 @@ Philip Karn, KA9Q; and other members of the WSJT Development Group.
 
 If you want to build a Visual Studio .net project that implements FT8, then
 you do <b><i>not</i></b> need to build this kit. Instead, download its result:
-	 XDwsjtFtSdk-&lt;version&gt;.7z
+	 XDwsjtFtSdk-&lt;version&gt;.zip
 
 See the <a href='Makefile'>Makefile</a>.
-It uses <a href='https://sourceforge.net/projects/mingw/'>MINGW</a> to build a dll with the FT8 encoding algorithms as built from 
+It uses <a href='https://osdn.net/projects/mingw/'>MINGW</a> to build a dll with the FT8 encoding algorithms as built from 
 the published wsjt-x sources. It supports a 32 bit bulid using mingw, and,
 optionally, also a 64 bit build if you also install mingw64.
 
