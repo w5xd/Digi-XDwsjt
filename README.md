@@ -20,7 +20,7 @@ It uses <a href='https://osdn.net/projects/mingw/'>MINGW</a> to build a dll with
 the published wsjt-x sources. It supports a 32 bit bulid using mingw, and,
 optionally, also a 64 bit build if you also install mingw64.
 
-The result of "make all" is a lib32 or lib64 continaing the code to
+The result of "make all" is a lib32 or lib64 containing the code to
 distribute. After you do make-all in 32b and/or 64b, then run
 MakeWinSDK to pack up an SDK that itself supports whichever
 architectures you have built up to then.
