@@ -1,15 +1,15 @@
 # Makefile for XDwsjtFT.dll for Windows
-# Copyright (c) 2020 by Wayne E. Wright, W5XD
+# Copyright (c) 2022 by Wayne E. Wright, W5XD
 #
 # Notice required: This work is a derivative of WSJT-X:
 #
-#	The algorithms, source code, look-and-feel of WSJT-X and related 
-#	programs, and protocol specifications for the modes FSK441, FT8, JT4, 
-#	JT6M, JT9, JT65, JTMS, QRA64, ISCAT, MSK144 are Copyright (C) 
-#	2001-2020 by one or more of the following authors: Joseph Taylor, 
-#	K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, 
-#	IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR;
-#	Philip Karn, KA9Q; and other members of the WSJT Development Group.
+#	The algorithms, source code, look-and-feel of WSJT-X and related programs,
+#	and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M,
+#	JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2022 by one or more of
+#	the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN;
+#	Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR;
+#	Philip Karn, KA9Q; Chester Fennell, KG4IYS; Uwe Risse, DG2YCB; and other members of
+#	the WSJT Development Group.
 #
 # If you only want to build a .NET application that implements FT8/FT4 that is compatible
 # with wsjtx, then you probably do NOT need to run this Makefile. 
@@ -27,7 +27,7 @@
 # This Makefile builds the Windows dll XDwsjtFT.dll using the MINGW toolset.
 # There are 3 downloads to obtain to make this work, (and a fourth to get a w64 dll):
 # 
-# 1. The file wsjtx-2.2.0.tgz from https://sourceforge.net/projects/wsjt/files/wsjtx-2.2.0/
+# 1. The file wsjtx-2.6.0.tgz from https://sourceforge.net/projects/wsjt/files/wsjtx-2.6.0/
 # These are the sources to wsjtx version 2. NO CHANGES ARE MADE TO THOSE SOURCES
 # Unpack the archive onto your disk to the location of your choosing.
 # The archive contains archives. Unpack them, too.
@@ -45,8 +45,8 @@
 # Arranging for make to find the wsjtx source
 # The MINGW environment has an etc directory containing a file named fstab.
 # Add two lines to it, similar to this:
-# 	C:/dev/wsjtx-src				/wsjtx-src
-# 	C:/dev/wsjtx-src/wsjtx-2.2.0/src/wsjtx/boost	/boost
+#	C:/dev/wsjtx-src/wsjtx-2.6.0/src/wsjtx	/wsjtx-src
+#	C:/dev/boost/boost_1_79_0		/boost
 # Explanation: I unzipped the wsjtx sources into C:\dev\wsjtx-src. So I make MINGW's /wsjtx-src point to it.
 # A cpp compile below needs boost. Make MINGW's /boost point to the boost from wsjtx
 # Now that /dev is MINGW's view of the source, point WSJTX_SOURCE to its subdirectory that this Makefile cares about.
@@ -151,7 +151,7 @@ cpp_objects = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(cpp_src))
 #demodulator
 fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
 		  timer_module.f90 timer_impl.f90 ft8_decode.f90 \
-		  my_hash.f90 ft8b.f90 sync8.f90 ft8apset.f90 indexx.f90 sync8d.f90 \
+		  my_hash.f90 ft8b.f90 sync8.f90 ft8apset.f90 q65_set_list.f90 indexx.f90 sync8d.f90 \
 		  twkfreq1.f90 baseline.f90 \
 		  ft8_downsample.f90 subtractft8.f90 osd174_91.f90 bpdecode174_91.f90 \
 		  genft8refsig.f90 chkcrc14a.f90 \
