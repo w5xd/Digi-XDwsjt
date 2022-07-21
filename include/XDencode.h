@@ -16,17 +16,6 @@
  */
 typedef size_t fortran_charlen_t;
 extern "C" {
-#if 0
-	// for transmit....
-
-    void gen_ft8wave_(int itone[], int* nsym, int* nsps, float* bt, float* fsample, float* f0,
-                    float xjunk[], float wave[], int* icmplx, int* nwave);
-
-    void gen_ft4wave_(int itone[], int* nsym, int* nsps, float* fsample, float* f0,
-                    float xjunk[], float wave[], int* icmplx, int* nwave);
-
-    void get_ft4msg_(int* idecode, char* line, int len);
-#endif
     void genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
                int itone[], fortran_charlen_t, fortran_charlen_t);
 
