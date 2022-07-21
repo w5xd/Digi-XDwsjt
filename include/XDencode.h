@@ -16,6 +16,7 @@
  */
 typedef size_t fortran_charlen_t;
 extern "C" {
+#if 0
 	// for transmit....
     void genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
                int itone[], fortran_charlen_t, fortran_charlen_t);
@@ -30,6 +31,8 @@ extern "C" {
                     float xjunk[], float wave[], int* icmplx, int* nwave);
 
     void get_ft4msg_(int* idecode, char* line, int len);
+    float gfsk_pulse_(float *amp, float *time);
+#endif
 
 	// for receive...
     void symspec_(struct dec_data *, int* k, int* ntrperiod, int* nsps, int* ingain,
@@ -38,7 +41,6 @@ extern "C" {
 
     void chkcall_(char call[13], char basecall[6], int *cok, fortran_charlen_t, fortran_charlen_t);
     void __packjt77_MOD_pack28(char call[13], int *n28, fortran_charlen_t);
-    float gfsk_pulse_(float *amp, float *time);
 
     void xdpack77_(char msg[37], int *i3, int *n3, char c77[77]);
     void xdunpack77_(char c77[77], int *nrx, char msg[37], char *success );

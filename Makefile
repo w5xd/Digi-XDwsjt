@@ -1,4 +1,4 @@
-# Makefile for XDwsjtFT.dll for Windows
+# Makefile for XDwsjt.dll for Windows
 # Copyright (c) 2022 by Wayne E. Wright, W5XD
 #
 # Notice required: This work is a derivative of WSJT-X:
@@ -14,7 +14,7 @@
 # If you only want to build a .NET application that implements FT8/FT4 that is compatible
 # with wsjtx, then you probably do NOT need to run this Makefile. 
 #
-# If you link to XDwsjtFT.dll, you should read this:
+# If you link to XDwsjt.dll, you should read this:
 # https://www.gnu.org/licenses/gpl-faq.html#IfLibraryIsGPL
 #
 # Instead, you need the binaries and include files that result from
@@ -24,7 +24,7 @@
 # Also in XDwsjtSdk are the binaires you'll need
 # for a distribution kit in libWin32 and/or libx64.
 #
-# This Makefile builds the Windows dll XDwsjtFT.dll using the MINGW toolset.
+# This Makefile builds the Windows dll XDwsjt.dll using the MINGW toolset.
 # There are 3 downloads to obtain to make this work, (and a fourth to get a w64 dll):
 # 
 # 1. The file wsjtx-2.6.0.tgz from https://sourceforge.net/projects/wsjt/files/wsjtx-2.6.0/
@@ -61,7 +61,7 @@ WSJTX_SOURCE = /wsjtx-src
 # Two more files to edit to make the 64 bit build work:
 # In the MINGW msys directory with msys.bat, I added the following contents to a new file named msys64.bat:
 # in msys64.bat:
-# 	@rem for XDwsjtFT 64 bit build
+# 	@rem for XDwsjt 64 bit build
 #	set MSYSTEM=MINGW64
 # 	call msys.bat
 # 
@@ -84,7 +84,7 @@ WSJTX_SOURCE = /wsjtx-src
 # What you need at the end is the buildWin32 (or buildx64) directory. Those are the binaries for
 # distribution. 
 #
-# To build against XDwsjtFT.dll, you go to the Visual Studio solution (in a separate 
+# To build against XDwsjt.dll, you go to the Visual Studio solution (in a separate 
 # repo) and edit the 3 Visual Studio .props files to point here for INCLUDE and LIB defintions.
 #
 # To pack up the results of building this kit, use MakeWinSDK.bat to pack
@@ -127,8 +127,8 @@ vpath %.f90 $(WSJTX_SOURCE)/lib/ft4
 vpath %.f90 $(WSJTX_SOURCE)/lib/77bit
 vpath %.cpp $(WSJTX_SOURCE)/lib
 
-all:    $(BUILDDIR)/XDwsjtFT.dll include/commons.h $(BUILDDIR)/CommonBlockOffsetDisplay \
-	$(BUILDDIR)/XDwsjtFT.dll $(KITLIBDIR) packtest.exe
+all:    $(BUILDDIR)/XDwsjt.dll include/commons.h $(BUILDDIR)/CommonBlockOffsetDisplay \
+	$(BUILDDIR)/XDwsjt.dll $(KITLIBDIR) packtest.exe
 
 
 #modulator
@@ -156,10 +156,11 @@ fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
 		  ft8_downsample.f90 subtractft8.f90 osd174_91.f90 bpdecode174_91.f90 \
 		  genft8refsig.f90 chkcrc14a.f90 \
 		  platanh.f90 azdist.f90 geodist.f90 filbig.f90 \
-		  xdinitfftw3.f90 xduninitfftw3.f90 nuttal_window.f90 gen_ft8wave.f90 \
+		  nuttal_window.f90 gen_ft8wave.f90 \
 		  ft4_decode.f90 ft4_downsample.f90 getcandidates4.f90 subtractft4.f90 \
 		  sync4d.f90 ft4_baseline.f90 get_ft4_bitmetrics.f90 \
-		  decode174_91.f90 get_spectrum_baseline.f90 peakup.f90 get_crc14.f90
+		  decode174_91.f90 get_spectrum_baseline.f90 peakup.f90 get_crc14.f90 \
+		  xdinitfftw3.f90 xduninitfftw3.f90
 
 $(BUILDDIR)/XDdecode.o: XDrcv/XDdecode.f90 XDrcv/jt9com.f90
 	${FC} ${FFLAGS} -Wno-unused-dummy-argument -c XDrcv/XDdecode.f90 -o $(BUILDDIR)/XDdecode.o
@@ -199,19 +200,19 @@ XDrcv/jt9com.f90:
 $(BUILDDIR)/XDwsjtFTres.o:	XDwsjtFT.rc
 	windres XDwsjtFT.rc $(BUILDDIR)/XDwsjtFTres.o
 
-$(KITLIBDIR):	 $(BUILDDIR)/XDwsjtFT.dll make-$(KITLIBDIR)
+$(KITLIBDIR):	 $(BUILDDIR)/XDwsjt.dll make-$(KITLIBDIR)
 	make-$(KITLIBDIR)
 
 # is fftw3f-3 the best one for this purpose? its the one wsjtx-2.0.0 uses
-$(BUILDDIR)/XDwsjtFT.dll: \
+$(BUILDDIR)/XDwsjt.dll: \
 	$(objects) $(cpp_objects) $(BUILDDIR)/XDwsjtFTres.o $(BUILDDIR)/XDxmitFT8.o \
 		$(robjects) $(BUILDDIR)/XDdecode.o $(BUILDDIR)/packandunpack77.o
-	$(FC) -g -Og -o $(BUILDDIR)/XDwsjtFT.dll $(objects) $(cpp_objects) \
+	$(FC) -g -Og -o $(BUILDDIR)/XDwsjt.dll $(objects) $(cpp_objects) \
 	$(BUILDDIR)/XDwsjtFTres.o \
 	$(BUILDDIR)/XDxmitFT8.o \
 	$(BUILDDIR)/packandunpack77.o \
 	$(robjects) $(BUILDDIR)/XDdecode.o \
-	-shared -L$(LIB) -lfftw3f-3 -lstdc++ -Wl,--out-implib,$(BUILDDIR)/XDwsjtFT.lib
+	-shared -L$(LIB) -lfftw3f-3 -lstdc++ -Wl,--out-implib,$(BUILDDIR)/XDwsjt.lib
 
 #test programs
 
