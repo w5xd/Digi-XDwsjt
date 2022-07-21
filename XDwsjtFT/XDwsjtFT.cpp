@@ -11,7 +11,7 @@ struct SymSpecFcn {
 
     SymSpecFcn()
     {
-        m_module = LoadLibraryA("");
+        m_module = LoadLibraryA("XDwsjt");
         m_proc = reinterpret_cast<symspec>(GetProcAddress(m_module, "_symspec_"));
     }
 
