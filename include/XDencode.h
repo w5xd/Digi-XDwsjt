@@ -18,11 +18,6 @@ typedef size_t fortran_charlen_t;
 extern "C" {
 #if 0
 	// for transmit....
-    void genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
-               int itone[], fortran_charlen_t, fortran_charlen_t);
-
-    void genft4_(char* msg, int* ichk, char* msgsent, char ft4msgbits[], int itone[],
-               fortran_charlen_t, fortran_charlen_t);
 
     void gen_ft8wave_(int itone[], int* nsym, int* nsps, float* bt, float* fsample, float* f0,
                     float xjunk[], float wave[], int* icmplx, int* nwave);
@@ -31,8 +26,13 @@ extern "C" {
                     float xjunk[], float wave[], int* icmplx, int* nwave);
 
     void get_ft4msg_(int* idecode, char* line, int len);
-    float gfsk_pulse_(float *amp, float *time);
 #endif
+    void genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
+               int itone[], fortran_charlen_t, fortran_charlen_t);
+
+    void genft4_(char* msg, int* ichk, char* msgsent, char ft4msgbits[], int itone[],
+               fortran_charlen_t, fortran_charlen_t);
+    float gfsk_pulse_(float *amp, float *time);
 
 	// for receive...
     void symspec_(struct dec_data *, int* k, int* ntrperiod, int* nsps, int* ingain,

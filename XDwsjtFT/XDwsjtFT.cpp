@@ -83,4 +83,21 @@ extern "C" {
         xduninitfftw3_(data_dir);
     }
 
+    void shim_genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
+        int itone[], fortran_charlen_t l1, fortran_charlen_t l2)
+    {
+        genft8_(msg, i3, n3, msgsent, ft8msgbits, itone, l1, l2);
+    }
+
+    void shim_genft4_(char* msg, int* ichk, char* msgsent, char ft4msgbits[], int itone[],
+        fortran_charlen_t l1, fortran_charlen_t l2)
+    {
+        genft4_(msg, ichk, msgsent, ft4msgbits, itone, l1, l2);
+    }
+    float shim_gfsk_pulse_(float *amp, float *time)
+    {
+        return gfsk_pulse_(amp, time);
+    }
+
+
 }

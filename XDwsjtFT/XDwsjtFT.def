@@ -10,3 +10,6 @@ EXPORTS
     xdinitfftw3_=shim_xdinitfftw3_
     xddecode_=shim_xddecode_
     xduninitfftw3_=shim_xduninitfftw3_
+    genft8_=shim_genft8_
+    genft4_=shim_genft4_
+    gfsk_pulse_=shim_gfsk_pulse_
