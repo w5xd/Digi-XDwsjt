@@ -1,5 +1,5 @@
 #pragma once
-/* Copyright (c) 2019 by Wayne E. Wright, W5XD  */
+/* Copyright (c) 2022 by Wayne E. Wright, W5XD  */
 #include "commons.h"
 extern "C" {
 	void xdinitfftw3_(const char *data_dir);

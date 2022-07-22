@@ -1,6 +1,6 @@
 #pragma once
 #include "commons.h"
-/* Copyright (c) 2019 by Wayne E. Wright, W5XD
+/* Copyright (c) 2022 by Wayne E. Wright, W5XD
  *
  * The contents of this file are exerpted from the sources obtained from  
  * https://sourceforge.net/projects/wsjt/files/wsjtx-2.1.0/

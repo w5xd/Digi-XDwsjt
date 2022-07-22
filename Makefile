@@ -144,13 +144,15 @@ $(BUILDDIR)/XDxmitFT8.o: XDxmitFT8.cpp include/commons.h
 
 $(BUILDDIR)/packandunpack77.o: packandunpack77.f90
 
+$(BUILDDIR)/ft8_decode.o: $(BUILDDIR)/ft8_a7.o
+
 cpp_src = crc14.cpp
 objects = $(patsubst %.f90,$(BUILDDIR)/%.o,$(fortran_xmit_src))
 cpp_objects = $(patsubst %.cpp,$(BUILDDIR)/%.o,$(cpp_src))
 
 #demodulator
 fortran_rcv_src = options.f90 prog_args.f90 iso_c_utilities.f90 \
-		  timer_module.f90 timer_impl.f90 ft8_decode.f90 \
+		  timer_module.f90 timer_impl.f90 ft8_decode.f90 ft8_a7.f90 \
 		  my_hash.f90 ft8b.f90 sync8.f90 ft8apset.f90 q65_set_list.f90 indexx.f90 sync8d.f90 \
 		  twkfreq1.f90 baseline.f90 \
 		  ft8_downsample.f90 subtractft8.f90 osd174_91.f90 bpdecode174_91.f90 \
