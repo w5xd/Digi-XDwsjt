@@ -6,48 +6,48 @@
 ** it might be possible to maintain the old interface here.
 */
 
+#include "XDencode.h" // function prototypes published to Windows clients
+#include "XDdecode.h" // ditto
 #include <Windows.h>
-#include "XDencode.h"
-#include "XDdecode.h"
 
-struct SymSpecFcn {
+namespace {
+
+    struct WsjtFcn {
     // symspec has a new signature in wsjt-x 2.6 and this is it:
     typedef void (* symspec)(struct dec_data *, int* k, double* ntrperiod, int* nsps, int* ingain,
         bool* bLowSidelobes, int* minw, float* px, float s[], float* df3,
         int* nhsym, int* npts8, float *m_pxmax, int *npct);
 
-    SymSpecFcn()
+    WsjtFcn()
     {
         m_module = LoadLibraryA("XDwsjt.dll");
-        m_proc = reinterpret_cast<symspec>(GetProcAddress(m_module, "symspec_"));
+        m_symspec = reinterpret_cast<symspec>(GetProcAddress(m_module, "symspec_"));
     }
 
-    symspec fcn() const { return m_proc;  }
+    symspec symspec_() const { return m_symspec; }
 protected:
     HMODULE m_module;
-    symspec m_proc;
+    symspec m_symspec;
 };
 
-extern "C" {
+    WsjtFcn wsjtFcn;
+}
 
 /* The naming convention here is to use "shim_" to prefix the names in this DLL.
 ** Windows development tools enable publishing a different name for clients than
 ** is used to link this DLL, and that publishing is done in the DLL's .DEF file.
 */
 
-    // this is the old signature, pre wsjtx 2.6
-    // we can't dispense with the "shim_" prefix because there cannot be multiple
-    // C-callable functions sharing the same name but with different parameters.
-    // Only C++ allows that.
+extern "C" {
+
+    /* These are the old signatures, pre wsjtx 2.6 */
     void shim_symspec_(struct dec_data *a1, int* k, int* ntrperiod, int* nsps, int* ingain,
         bool* bLowSidelobes, int* minw, float* px, float s[], float* df3,
         int* nhsym, int* npts8, float *m_pxmax)
     {
-        static SymSpecFcn symSpecFcn;
-        double TRPeriod = *ntrperiod;
+        double TRPeriod = 60. * *ntrperiod;
         int pct = 0;
-        auto f = symSpecFcn.fcn();
-        return (*f)(a1, k, &TRPeriod, nsps, ingain, bLowSidelobes, minw, px, s, df3, nhsym, npts8, m_pxmax, &pct);
+        return (*wsjtFcn.symspec_())(a1, k, &TRPeriod, nsps, ingain, bLowSidelobes, minw, px, s, df3, nhsym, npts8, m_pxmax, &pct);
     }
 
     void shim_chkcall_(char call[13], char basecall[6], int *cok, fortran_charlen_t l1, fortran_charlen_t l2)
@@ -64,6 +64,7 @@ extern "C" {
     {
         return xdpack77_(msg, i3, n3, c77);
     }
+
     void shim_xdunpack77_(char c77[77], int *nrx, char msg[37], char *success)
     {
         return xdunpack77_(c77, nrx, msg, success);
@@ -109,6 +110,7 @@ extern "C" {
     {
         return genft4_(msg, ichk, msgsent, ft4msgbits, itone, l1, l2);
     }
+
     float shim_gfsk_pulse_(float *amp, float *time)
     {
         return gfsk_pulse_(amp, time);
