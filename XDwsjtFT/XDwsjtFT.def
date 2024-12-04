@@ -1,0 +1,15 @@
+LIBRARY
+EXPORTS
+    chkcall_=shim_chkcall_
+    symspec_=shim_symspec_
+    __packjt77_MOD_pack28=shim___packjt77_MOD_pack28
+    xdpack77_=shim_xdpack77_
+    xdunpack77_=shim_xdunpack77_
+    xdsetpack77mycall_=shim_xdsetpack77mycall_
+    xdsetpack77dxcall_=shim_xdsetpack77dxcall_
+    xdinitfftw3_=shim_xdinitfftw3_
+    xddecode_=shim_xddecode_
+    xduninitfftw3_=shim_xduninitfftw3_
+    genft8_=shim_genft8_
+    genft4_=shim_genft4_
+    gfsk_pulse_=shim_gfsk_pulse_

@@ -1,6 +1,6 @@
 #pragma once
 #include "commons.h"
-/* Copyright (c) 2019 by Wayne E. Wright, W5XD
+/* Copyright (c) 2022 by Wayne E. Wright, W5XD
  *
  * The contents of this file are exerpted from the sources obtained from  
  * https://sourceforge.net/projects/wsjt/files/wsjtx-2.1.0/
@@ -16,20 +16,12 @@
  */
 typedef size_t fortran_charlen_t;
 extern "C" {
-	// for transmit....
     void genft8_(char* msg, int* i3, int* n3, char* msgsent, char ft8msgbits[],
                int itone[], fortran_charlen_t, fortran_charlen_t);
 
     void genft4_(char* msg, int* ichk, char* msgsent, char ft4msgbits[], int itone[],
                fortran_charlen_t, fortran_charlen_t);
-
-    void gen_ft8wave_(int itone[], int* nsym, int* nsps, float* bt, float* fsample, float* f0,
-                    float xjunk[], float wave[], int* icmplx, int* nwave);
-
-    void gen_ft4wave_(int itone[], int* nsym, int* nsps, float* fsample, float* f0,
-                    float xjunk[], float wave[], int* icmplx, int* nwave);
-
-    void get_ft4msg_(int* idecode, char* line, int len);
+    float gfsk_pulse_(float *amp, float *time);
 
 	// for receive...
     void symspec_(struct dec_data *, int* k, int* ntrperiod, int* nsps, int* ingain,
@@ -38,7 +30,6 @@ extern "C" {
 
     void chkcall_(char call[13], char basecall[6], int *cok, fortran_charlen_t, fortran_charlen_t);
     void __packjt77_MOD_pack28(char call[13], int *n28, fortran_charlen_t);
-    float gfsk_pulse_(float *amp, float *time);
 
     void xdpack77_(char msg[37], int *i3, int *n3, char c77[77]);
     void xdunpack77_(char c77[77], int *nrx, char msg[37], char *success );
